@@ -1,0 +1,58 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          # 強制使用公共 npm registry
+          registry-url: 'https://registry.npmjs.org'
+          
+      - name: Reset npm registry to public
+        run: |
+          npm config set registry https://registry.npmjs.org
+          npm config delete @tablecheck:registry || true
+          
+      - name: Install dependencies
+        run: npm ci
+        env:
+          # 確保使用公共 registry
+          NPM_CONFIG_REGISTRY: https://registry.npmjs.org
+        
+      - name: Type check
+        run: npm run type-check
+        
+      - name: Build
+        run: npm run build
+        
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './dist'
+          
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+        if: github.ref == 'refs/heads/main'
