@@ -1,3 +1,68 @@
+/* src/index.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --chaos-primary: #667eea;
+  --chaos-secondary: #764ba2;
+  --chaos-accent: #f093fb;
+  --chaos-surface: rgba(255, 255, 255, 0.1);
+  --chaos-bg: #0f0f23;
+  --chaos-text: #ffffff;
+}
+
+.bg-chaos {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+}
+
+.text-chaos-text {
+  color: var(--chaos-text);
+}
+
+.text-chaos-primary {
+  color: var(--chaos-primary);
+}
+
+.bg-chaos-surface\/80 {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.bg-chaos-surface\/50 {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.bg-chaos-surface\/30 {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.border-chaos-primary\/20 {
+  border-color: rgba(102, 126, 234, 0.2);
+}
+
+.from-chaos-primary {
+  --tw-gradient-from: var(--chaos-primary);
+}
+
+.to-chaos-secondary {
+  --tw-gradient-to: var(--chaos-secondary);
+}
+
+.via-chaos-accent {
+  --tw-gradient-via: var(--chaos-accent);
+}
+
+.shadow-chaos-primary\/30 {
+  box-shadow: 0 10px 15px -3px rgba(102, 126, 234, 0.3);
+}
+
+.chaos-bg-animation {
+  background: linear-gradient(45deg, #667eea, #764ba2, #f093fb);
+  background-size: 300% 300%;
+  animation: gradientShift 6s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
