@@ -18,12 +18,12 @@ export class MandelbrotSystem {
   /**
    * 複數乘法: (a + bi) * (c + di) = (ac - bd) + (ad + bc)i
    */
-  private complexMultiply(a: Complex, b: Complex): Complex {
-    return {
-      re: a.re * b.re - a.im * b.im,
-      im: a.re * b.im + a.im * b.re
-    };
-  }
+  // private complexMultiply(a: Complex, b: Complex): Complex {
+  //   return {
+  //     re: a.re * b.re - a.im * b.im,
+  //     im: a.re * b.im + a.im * b.re
+  //   };
+  // }
 
   /**
    * 複數模長的平方: |z|² = re² + im²
