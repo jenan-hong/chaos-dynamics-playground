@@ -1,9 +1,10 @@
-// src/components/system/JuliaSet.tsx
 import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useCanvas } from '../../hooks/useCanvas';
 import { JuliaSystem } from '@/systems/math/JuliaSet';
 
 const JuliaSet: React.FC = () => {
+  const { t } = useTranslation();
   const { canvasRef, ctx, isReady } = useCanvas();
   
   const [params, setParams] = useState({
@@ -39,7 +40,17 @@ const JuliaSet: React.FC = () => {
   // 更新集合描述
   const updateDescription = () => {
     if (juliaSystemRef.current) {
-      setSetDescription(juliaSystemRef.current.getSetDescription());
+      const description = juliaSystemRef.current.getSetDescription();
+      // 根據描述內容選擇對應的翻譯鍵
+      if (description.includes('連通') || description.includes('連結') || description.includes('Connected')) {
+        if (description.includes('複雜') || description.includes('complex')) {
+          setSetDescription(t('connectedComplexSet'));
+        } else {
+          setSetDescription(t('connectedSet'));
+        }
+      } else {
+        setSetDescription(t('dustSet'));
+      }
     }
   };
 
@@ -170,11 +181,11 @@ const JuliaSet: React.FC = () => {
         <div className="inline-flex items-center space-x-3 mb-4">
           <div className="text-4xl">✨</div>
           <h2 className="text-3xl font-bold bg-gradient-to-r from-pink-400 to-purple-400 bg-clip-text text-transparent">
-            Julia 集合
+            {t('juliaTitle')}
           </h2>
         </div>
         <p className="text-gray-300 text-lg max-w-2xl mx-auto">
-          探索參數化的分形美學，每個參數c都創造出獨特的圖案
+          {t('juliaSubtitle')}
         </p>
       </div>
 
@@ -194,8 +205,8 @@ const JuliaSet: React.FC = () => {
         <div className="absolute top-6 left-6 status-display rounded-lg p-3 text-sm">
           <div className="flex items-center space-x-6">
             <div className="text-pink-400">c = {params.cReal.toFixed(3)} + {params.cImag.toFixed(3)}i</div>
-            <div className="text-purple-400">縮放: {params.zoom.toFixed(2)}x</div>
-            <div className="text-blue-400">迭代: {params.maxIterations}</div>
+            <div className="text-purple-400">{t('zoom')}: {params.zoom.toFixed(2)}x</div>
+            <div className="text-blue-400">{t('maxIterations')}: {params.maxIterations}</div>
           </div>
         </div>
 
@@ -204,7 +215,7 @@ const JuliaSet: React.FC = () => {
           <div className="absolute bottom-6 left-6 right-6">
             <div className="bg-gray-800/80 rounded-lg p-3">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-purple-400">生成中...</span>
+                <span className="text-sm text-purple-400">{t('generating')}</span>
                 <span className="text-sm text-gray-300">{progress.toFixed(1)}%</span>
               </div>
               <div className="w-full bg-gray-700 rounded-full h-2">
@@ -224,7 +235,7 @@ const JuliaSet: React.FC = () => {
         <div className="chaos-card p-6">
           <h3 className="text-xl font-bold text-pink-400 mb-4 flex items-center">
             <span className="mr-2">🎛️</span>
-            參數控制
+            {t('parameters')}
           </h3>
           
           {/* 動作按鈕 */}
@@ -238,26 +249,26 @@ const JuliaSet: React.FC = () => {
                   : 'bg-purple-600 hover:bg-purple-700'
               }`}
             >
-              🔄 重新生成
+              🔄 {t('regenerate')}
             </button>
             <button
               onClick={handleReset}
               className="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-lg text-sm font-medium transition-all"
             >
-              🏠 重置
+              🏠 {t('reset')}
             </button>
             <button
               onClick={handleExport}
               className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-medium transition-all"
             >
-              💾 導出
+              💾 {t('export')}
             </button>
           </div>
           
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-pink-400 mb-2">
-                實部 (c): {params.cReal.toFixed(3)}
+                {t('realPart')}: {params.cReal.toFixed(3)}
               </label>
               <input 
                 type="range" 
@@ -271,7 +282,7 @@ const JuliaSet: React.FC = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-purple-400 mb-2">
-                虛部 (c): {params.cImag.toFixed(3)}
+                {t('imagPart')}: {params.cImag.toFixed(3)}
               </label>
               <input 
                 type="range" 
@@ -285,7 +296,7 @@ const JuliaSet: React.FC = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-blue-400 mb-2">
-                最大迭代: {params.maxIterations}
+                {t('maxIterations')}: {params.maxIterations}
               </label>
               <input 
                 type="range" 
@@ -299,7 +310,7 @@ const JuliaSet: React.FC = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-cyan-400 mb-2">
-                顏色強度: {params.colorIntensity.toFixed(1)}
+                {t('colorIntensity')}: {params.colorIntensity.toFixed(1)}
               </label>
               <input 
                 type="range" 
@@ -313,7 +324,7 @@ const JuliaSet: React.FC = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-green-400 mb-2">
-                縮放: {params.zoom.toFixed(2)}x
+                {t('zoom')}: {params.zoom.toFixed(2)}x
               </label>
               <input 
                 type="range" 
@@ -327,7 +338,7 @@ const JuliaSet: React.FC = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-yellow-400 mb-2">
-                逃逸半徑: {params.escapeRadius}
+                {t('escapeRadius')}: {params.escapeRadius}
               </label>
               <input 
                 type="range" 
@@ -343,43 +354,43 @@ const JuliaSet: React.FC = () => {
 
           {/* 預設選擇 */}
           <div className="mt-6">
-            <h4 className="text-sm font-medium text-gray-300 mb-3">精選預設：</h4>
+            <h4 className="text-sm font-medium text-gray-300 mb-3">{t('presets')}：</h4>
             <div className="grid grid-cols-2 gap-2">
               <button
                 onClick={() => handlePreset('dragon')}
                 className="px-3 py-2 bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700 rounded text-sm font-medium transition-all"
               >
-                🐉 龍型
+                🐉 {t('juliaPresets.dragon')}
               </button>
               <button
                 onClick={() => handlePreset('spiral')}
                 className="px-3 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded text-sm font-medium transition-all"
               >
-                🌀 螺旋
+                🌀 {t('juliaPresets.spiral')}
               </button>
               <button
                 onClick={() => handlePreset('dendrite')}
                 className="px-3 py-2 bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 rounded text-sm font-medium transition-all"
               >
-                🌿 樹枝
+                🌿 {t('juliaPresets.dendrite')}
               </button>
               <button
                 onClick={() => handlePreset('lightning')}
                 className="px-3 py-2 bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 rounded text-sm font-medium transition-all"
               >
-                ⚡ 閃電
+                ⚡ {t('juliaPresets.lightning')}
               </button>
               <button
                 onClick={() => handlePreset('classic')}
                 className="px-3 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded text-sm font-medium transition-all"
               >
-                💜 經典
+                💜 {t('juliaPresets.classic')}
               </button>
               <button
                 onClick={() => handlePreset('connected')}
                 className="px-3 py-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 rounded text-sm font-medium transition-all"
               >
-                🔗 連通
+                🔗 {t('juliaPresets.connected')}
               </button>
             </div>
           </div>
@@ -389,7 +400,7 @@ const JuliaSet: React.FC = () => {
         <div className="chaos-card p-6">
           <h3 className="text-xl font-bold text-purple-400 mb-4 flex items-center">
             <span className="mr-2">📚</span>
-            Julia 集合
+            {t('juliaName')}
           </h3>
           
           <div className="space-y-4">
@@ -401,46 +412,34 @@ const JuliaSet: React.FC = () => {
             </div>
             
             <div className="bg-gray-800/30 p-3 rounded">
-              <div className="text-sm font-semibold text-yellow-400 mb-2">當前集合類型：</div>
+              <div className="text-sm font-semibold text-yellow-400 mb-2">{t('currentSetType')}</div>
               <div className="text-xs text-gray-300">{setDescription}</div>
             </div>
 
             <div className="grid grid-cols-1 gap-3">
               <div className="bg-gray-800/30 p-3 rounded border-l-2 border-black">
-                <div className="text-sm font-semibold text-white">黑色區域</div>
-                <div className="text-xs text-gray-400">屬於Julia集合（有界軌道）</div>
+                <div className="text-sm font-semibold text-white">{t('blackRegion')}</div>
+                <div className="text-xs text-gray-400">{t('blackRegionDesc')}</div>
               </div>
               <div className="bg-gray-800/30 p-3 rounded border-l-2 border-pink-500">
-                <div className="text-sm font-semibold text-pink-400">彩色區域</div>
-                <div className="text-xs text-gray-400">發散軌道（逃逸到無窮）</div>
+                <div className="text-sm font-semibold text-pink-400">{t('colorRegion')}</div>
+                <div className="text-xs text-gray-400">{t('colorRegionDesc')}</div>
               </div>
               <div className="bg-gray-800/30 p-3 rounded border-l-2 border-purple-500">
-                <div className="text-sm font-semibold text-purple-400">邊界</div>
-                <div className="text-xs text-gray-400">混沌邊界的精細結構</div>
+                <div className="text-sm font-semibold text-purple-400">{t('boundary')}</div>
+                <div className="text-xs text-gray-400">{t('boundaryDesc')}</div>
               </div>
             </div>
 
             <div className="bg-gray-800/30 p-3 rounded">
               <div className="text-sm text-gray-300 mb-2">
-                <strong>操作說明：</strong>
+                <strong>{t('instructions')}：</strong>
               </div>
               <div className="text-xs text-gray-400 space-y-1">
-                <div>• 調整c參數探索不同形狀</div>
-                <div>• 點擊畫布進行縮放</div>
-                <div>• 嘗試精選預設看有趣圖案</div>
-                <div>• 增加迭代數獲得更多細節</div>
-              </div>
-            </div>
-
-            <div className="bg-gray-800/30 p-3 rounded">
-              <div className="text-sm text-gray-300 mb-2">
-                <strong>數學背景：</strong>
-              </div>
-              <div className="text-xs text-gray-400 space-y-1">
-                <div>• Julia集合由法國數學家Gaston Julia研究</div>
-                <div>• 與Mandelbrot集合密切相關</div>
-                <div>• 每個c值對應一個Julia集合</div>
-                <div>• 展現了複動力系統的混沌美學</div>
+                <div>• {t('adjustParameters')}</div>
+                <div>• {t('clickToZoom')}</div>
+                <div>• {t('usePresets')}</div>
+                <div>• {t('exportImage')}</div>
               </div>
             </div>
           </div>

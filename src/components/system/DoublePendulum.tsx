@@ -1,10 +1,11 @@
-// src/components/systems/DoublePendulum.tsx
 import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useCanvas } from '../../hooks/useCanvas';
 import { useAnimation } from '../../hooks/useAnimation';
 import { DoublePendulumSystem } from '@/systems/math/DoublePendulum';
 
 const DoublePendulum: React.FC = () => {
+  const { t } = useTranslation();
   const { canvasRef, ctx, isReady, clearCanvas } = useCanvas();
   const { isRunning, fps, toggleAnimation, setAnimationCallback } = useAnimation();
   
@@ -157,12 +158,12 @@ const DoublePendulum: React.FC = () => {
       <div className="text-center">
         <div className="inline-flex items-center space-x-3 mb-4">
           <div className="text-4xl">⚖️</div>
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
-            混沌擺
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+            {t('pendulumTitle')}
           </h2>
         </div>
         <p className="text-gray-300 text-lg max-w-2xl mx-auto">
-          觀察雙擺系統中微小初始條件差異如何導致完全不同的軌跡
+          {t('pendulumSubtitle')}
         </p>
       </div>
 
@@ -179,61 +180,60 @@ const DoublePendulum: React.FC = () => {
         
         {/* 狀態顯示 */}
         <div className="absolute top-6 left-6 status-display rounded-lg p-3 text-sm">
-          <div className="flex items-center space-x-6">
-            <div className="text-green-400">FPS: {fps}</div>
-            <div className="text-blue-400">θ1: {(currentState.theta1 * 180 / Math.PI).toFixed(1)}°</div>
-            <div className="text-red-400">θ2: {(currentState.theta2 * 180 / Math.PI).toFixed(1)}°</div>
-            <div className="text-purple-400">能量: {totalEnergy.toFixed(2)}</div>
+          <div className="grid grid-cols-2 gap-4 text-xs">
+            <div className="text-cyan-400">θ₁: {currentState.theta1.toFixed(3)}°</div>
+            <div className="text-blue-400">θ₂: {currentState.theta2.toFixed(3)}°</div>
+            <div className="text-green-400">ω₁: {currentState.omega1.toFixed(3)}</div>
+            <div className="text-yellow-400">ω₂: {currentState.omega2.toFixed(3)}</div>
+            <div className="text-purple-400 col-span-2">{t('energy')}: {totalEnergy.toFixed(2)}</div>
           </div>
         </div>
 
-        {!isReady && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-lg backdrop-blur-sm">
-            <div className="text-center">
-              <div className="animate-spin w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-              <p className="text-gray-300">初始化混沌擺中...</p>
-            </div>
-          </div>
-        )}
+        {/* FPS 顯示 */}
+        <div className="absolute top-6 right-6 status-display rounded-lg p-2 text-sm">
+          <div className="text-green-400">FPS: {fps}</div>
+        </div>
       </div>
-      
+
       {/* 控制面板 */}
-      <div className="flex gap-6">
-        {/* 系統參數控制 */}
-        <div className="flex-1 chaos-card p-6">
-          <div className="flex justify-between items-center mb-4">
-            <div>
-              <h3 className="text-xl font-semibold text-purple-400">系統參數</h3>
-              <p className="text-gray-400 text-sm">調整雙擺的物理參數</p>
-            </div>
-            <div className="flex space-x-2">
-              <button
-                onClick={toggleAnimation}
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                  isRunning ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'
-                }`}
-              >
-                {isRunning ? '⏸️ 停止' : '▶️ 開始'}
-              </button>
-              <button
-                onClick={handleReset}
-                className="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-lg text-sm font-medium transition-all"
-              >
-                🔄 重置
-              </button>
-              <button
-                onClick={handleExport}
-                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-medium transition-all"
-              >
-                💾 導出
-              </button>
-            </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* 參數控制 */}
+        <div className="chaos-card p-6">
+          <h3 className="text-xl font-bold text-cyan-400 mb-4 flex items-center">
+            <span className="mr-2">🎛️</span>
+            {t('parameters')}
+          </h3>
+          
+          {/* 動作按鈕 */}
+          <div className="flex flex-wrap gap-2 mb-6">
+            <button
+              onClick={toggleAnimation}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                isRunning 
+                  ? 'bg-red-500 hover:bg-red-600' 
+                  : 'bg-green-500 hover:bg-green-600'
+              }`}
+            >
+              {isRunning ? `⏸️ ${t('stop')}` : `▶️ ${t('start')}`}
+            </button>
+            <button
+              onClick={handleReset}
+              className="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-lg text-sm font-medium transition-all"
+            >
+              🔄 {t('reset')}
+            </button>
+            <button
+              onClick={handleExport}
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-medium transition-all"
+            >
+              💾 {t('export')}
+            </button>
           </div>
           
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-yellow-400 mb-2">
-                重力: {params.gravity.toFixed(2)}
+                {t('gravity')}: {params.gravity.toFixed(2)}
               </label>
               <input 
                 type="range" 
@@ -247,7 +247,7 @@ const DoublePendulum: React.FC = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-red-400 mb-2">
-                阻尼: {params.damping.toFixed(3)}
+                {t('damping')}: {params.damping.toFixed(3)}
               </label>
               <input 
                 type="range" 
@@ -261,7 +261,7 @@ const DoublePendulum: React.FC = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-blue-400 mb-2">
-                長度1: {params.length1}
+                {t('length1')}: {params.length1}
               </label>
               <input 
                 type="range" 
@@ -275,7 +275,7 @@ const DoublePendulum: React.FC = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-green-400 mb-2">
-                長度2: {params.length2}
+                {t('length2')}: {params.length2}
               </label>
               <input 
                 type="range" 
@@ -289,7 +289,7 @@ const DoublePendulum: React.FC = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-purple-400 mb-2">
-                質量1: {params.mass1.toFixed(1)}
+                {t('mass1')}: {params.mass1.toFixed(1)}
               </label>
               <input 
                 type="range" 
@@ -302,80 +302,98 @@ const DoublePendulum: React.FC = () => {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-cyan-400 mb-2">
-                軌跡長度: {params.trailLength}
+              <label className="block text-sm font-medium text-orange-400 mb-2">
+                {t('mass2')}: {params.mass2.toFixed(1)}
               </label>
               <input 
                 type="range" 
-                min="100" 
-                max="1000" 
-                step="50" 
-                value={params.trailLength}
-                onChange={(e) => updateParam('trailLength', parseInt(e.target.value))}
+                min="0.5" 
+                max="3" 
+                step="0.1" 
+                value={params.mass2}
+                onChange={(e) => updateParam('mass2', parseFloat(e.target.value))}
                 className="w-full accent-purple-500" 
               />
             </div>
           </div>
 
-          {/* 預設按鈕 */}
-          <div className="flex justify-center space-x-3 mt-6 pt-4 border-t border-white/10">
-            <button
-              onClick={() => handlePreset('classic')}
-              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm transition-colors"
-            >
-              ⚖️ 經典雙擺
-            </button>
-            <button
-              onClick={() => handlePreset('asymmetric')}
-              className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg text-sm transition-colors"
-            >
-              📐 不對稱擺
-            </button>
-            <button
-              onClick={() => handlePreset('heavy')}
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-sm transition-colors"
-            >
-              🏋️ 重質量擺
-            </button>
+          {/* 預設選擇 */}
+          <div className="mt-6">
+            <h4 className="text-sm font-medium text-gray-300 mb-3">{t('presets')}：</h4>
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                onClick={() => handlePreset('classic')}
+                className="px-3 py-2 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded text-sm font-medium transition-all"
+              >
+                {t('pendulumPresets.classic')}
+              </button>
+              <button
+                onClick={() => handlePreset('asymmetric')}
+                className="px-3 py-2 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 rounded text-sm font-medium transition-all"
+              >
+                {t('pendulumPresets.asymmetric')}
+              </button>
+              <button
+                onClick={() => handlePreset('heavy')}
+                className="px-3 py-2 bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700 rounded text-sm font-medium transition-all"
+              >
+                {t('pendulumPresets.heavy')}
+              </button>
+            </div>
           </div>
         </div>
 
-        {/* 系統分析 */}
-        <div className="flex-1 chaos-card p-6">
-          <h3 className="text-xl font-semibold text-purple-400 mb-4">📊 系統分析</h3>
+        {/* 資訊面板 */}
+        <div className="chaos-card p-6">
+          <h3 className="text-xl font-bold text-blue-400 mb-4 flex items-center">
+            <span className="mr-2">📚</span>
+            {t('pendulumName')}
+          </h3>
+          
           <div className="space-y-4">
-            <div className="bg-gray-800/50 p-4 rounded-lg">
-              <h4 className="text-sm font-semibold text-cyan-400 mb-2">拉格朗日方程</h4>
-              <div className="text-xs text-gray-300 space-y-1">
-                <div>L = T - V (動能 - 位能)</div>
-                <div>d/dt(∂L/∂θ̇) - ∂L/∂θ = 0</div>
+            <div className="bg-gray-800/30 p-4 rounded border-l-4 border-cyan-500">
+              <div className="text-center text-sm text-cyan-400 space-y-1">
+                <div>{t('pendulumEquations')}</div>
+                <div className="text-xs text-gray-300">{t('lagrangianMechanics')}</div>
               </div>
             </div>
             
             <div className="grid grid-cols-1 gap-3">
-              <div className="bg-gray-800/30 p-3 rounded border-l-2 border-blue-500">
-                <div className="text-sm font-semibold text-blue-400">第一個擺</div>
-                <div className="text-xs text-gray-400">藍色質量 - 角度 θ1</div>
+              <div className="bg-gray-800/30 p-3 rounded border-l-2 border-cyan-500">
+                <div className="text-sm font-semibold text-cyan-400">{t('pendulumMass1')}</div>
+                <div className="text-xs text-gray-400">{t('firstPendulumBob')}</div>
               </div>
               <div className="bg-gray-800/30 p-3 rounded border-l-2 border-red-500">
-                <div className="text-sm font-semibold text-red-400">第二個擺</div>
-                <div className="text-xs text-gray-400">紅色質量 - 角度 θ2</div>
+                <div className="text-sm font-semibold text-red-400">{t('pendulumMass2')}</div>
+                <div className="text-xs text-gray-400">{t('secondPendulumBob')}</div>
               </div>
               <div className="bg-gray-800/30 p-3 rounded border-l-2 border-green-500">
-                <div className="text-sm font-semibold text-green-400">軌跡</div>
-                <div className="text-xs text-gray-400">第二個擺的運動路徑</div>
+                <div className="text-sm font-semibold text-green-400">{t('trajectory')}</div>
+                <div className="text-xs text-gray-400">{t('chaosTrail')}</div>
               </div>
             </div>
 
             <div className="bg-gray-800/30 p-3 rounded">
               <div className="text-sm text-gray-300 mb-2">
-                <strong>混沌特性：</strong>
+                <strong>{t('instructions')}：</strong>
               </div>
               <div className="text-xs text-gray-400 space-y-1">
-                <div>• 對初始條件極其敏感</div>
-                <div>• 非週期性運動</div>
-                <div>• 不可長期預測</div>
-                <div>• 相空間中的奇異吸引子</div>
+                <div>• {t('adjustParametersRealtime')}</div>
+                <div>• {t('observeChaosEvolution')}</div>
+                <div>• {t('comparePresets')}</div>
+                <div>• {t('watchEnergyConservation')}</div>
+              </div>
+            </div>
+
+            <div className="bg-gray-800/30 p-3 rounded">
+              <div className="text-sm text-gray-300 mb-2">
+                <strong>{t('mathBackground')}：</strong>
+              </div>
+              <div className="text-xs text-gray-400 space-y-1">
+                <div>• {t('doublePendulumDescription')}</div>
+                <div>• {t('sensitiveInitialConditions')}</div>
+                <div>• {t('conservativeSystem')}</div>
+                <div>• {t('hamiltonianDynamics')}</div>
               </div>
             </div>
           </div>

@@ -1,45 +1,47 @@
-// src/App.tsx (恢復美觀header + 修復布局)
-
 import { useState } from "react";
+import { useTranslation } from "react-i18next"; // 👈 新增
 import LorenzAttractor from "./components/system/LorenzAttractor";
 import MandelbrotSet from "./components/system/MandelbrotSet";
 import LogisticMap from "./components/system/LogisticMap";
 import DoublePendulum from "./components/system/DoublePendulum";
+import JuliaSet from "./components/system/JuliaSet";
+import LanguageSelector from "./components/common/LanguageSelector"; // 👈 新增
 
 type SystemType = 'lorenz' | 'mandelbrot' | 'pendulum' | 'logistic' | 'julia';
 
 const App: React.FC = () => {
+  const { t } = useTranslation(); // 👈 新增
   const [activeSystem, setActiveSystem] = useState<SystemType>('lorenz');
 
   const systems = [
     { 
       id: 'lorenz' as SystemType, 
-      name: '洛倫茲吸引子', 
-      description: '蝴蝶效應的數學化身',
+      name: t('lorenzName'), // 👈 修改
+      description: t('lorenzDesc'), // 👈 修改
       icon: '🦋'
     },
     { 
       id: 'mandelbrot' as SystemType, 
-      name: '曼德布洛特集合', 
-      description: '無限複雜的分形',
+      name: t('mandelbrotName'), // 👈 修改
+      description: t('mandelbrotDesc'), // 👈 修改
       icon: '🌀'
     },
     { 
       id: 'pendulum' as SystemType, 
-      name: '混沌擺', 
-      description: '雙擺的混沌運動',
+      name: t('pendulumName'), // 👈 修改
+      description: t('pendulumDesc'), // 👈 修改
       icon: '⚖️'
     },
     { 
       id: 'logistic' as SystemType, 
-      name: '邏輯映射', 
-      description: '從週期到混沌',
+      name: t('logisticName'), // 👈 修改
+      description: t('logisticDesc'), // 👈 修改
       icon: '📈'
     },
     { 
       id: 'julia' as SystemType, 
-      name: 'Julia集合', 
-      description: '美麗的分形圖案',
+      name: t('juliaName'), // 👈 修改
+      description: t('juliaDesc'), // 👈 修改
       icon: '✨'
     }
   ];
@@ -55,13 +57,7 @@ const App: React.FC = () => {
       case 'logistic':
         return <LogisticMap />;
       case 'julia':
-        return (
-          <div className="chaos-card p-12 text-center slide-in">
-            <div className="text-6xl mb-4">✨</div>
-            <h2 className="text-2xl font-bold text-purple-400 mb-2">Julia集合</h2>
-            <p className="text-gray-400">敬請期待...</p>
-          </div>
-        );
+        return <JuliaSet />;
       default:
         return <LorenzAttractor />;
     }
@@ -69,11 +65,11 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen text-white relative overflow-hidden">
-      {/* 動態背景 */}
+      {/* 動態背景 - 保持不變 */}
       <div className="fixed inset-0 chaos-bg-animation opacity-10"></div>
       <div className="fixed inset-0 bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900"></div>
       
-      {/* 背景粒子效果 */}
+      {/* 背景粒子效果 - 保持不變 */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         {[...Array(20)].map((_, i) => (
           <div
@@ -91,15 +87,19 @@ const App: React.FC = () => {
 
       {/* 主內容 */}
       <div className="relative z-10">
-        {/* 恢復美觀的Header */}
         <header className="glass-effect border-0 border-b border-white/10 slide-in">
           <div className="container mx-auto px-4 py-8">
+            {/* 👈 語言選擇器 - 新增 */}
+            <div className="flex justify-end mb-4">
+              <LanguageSelector />
+            </div>
+            
             <div className="text-center">
               <h1 className="text-4xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-purple-400 via-cyan-400 to-amber-400 bg-clip-text text-transparent">
-                混沌理論互動探索器
+                {t('appName')} {/* 👈 修改 */}
               </h1>
               <p className="text-gray-300 text-lg md:text-xl mb-6 max-w-2xl mx-auto">
-                探索確定性系統中的不可預測行為，體驗數學之美與混沌之奇
+                {t('subtitle')} {/* 👈 修改 */}
               </p>
               <div className="flex justify-center items-center space-x-6 text-sm text-gray-400">
                 <div className="flex items-center space-x-2">
@@ -120,7 +120,6 @@ const App: React.FC = () => {
         </header>
         
         <main className="container mx-auto px-4 py-8">
-          {/* Tab Navigation */}
           <nav className="flex justify-center mb-12 slide-in">
             <div className="glass-effect p-3 rounded-2xl">
               <div className="flex flex-wrap gap-3">
@@ -147,7 +146,6 @@ const App: React.FC = () => {
             </div>
           </nav>
           
-          {/* 系統內容 */}
           <div className="slide-in">
             {renderSystem()}
           </div>
