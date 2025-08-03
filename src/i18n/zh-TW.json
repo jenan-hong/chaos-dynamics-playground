@@ -94,7 +94,6 @@
     "asymmetric": "不對稱",
     "heavy": "重質量"
   },
-  
 
   "lorenzTitle": "洛倫茲吸引子",
   "lorenzSubtitle": "探索混沌理論的經典範例，觀察蝴蝶效應如何從簡單方程中誕生",
@@ -139,5 +138,83 @@
     "iterations": "迭代",
     "zoom": "縮放",
     "degrees": "度"
-  }
+  },
+  "viewControl": "視角控制",
+  "offsetX": "X軸偏移",
+  "offsetY": "Y軸偏移",
+  "lorenzEquations": "洛倫茲方程組",
+  "convectionTerm": "對流強度項",
+  "temperatureTerm": "溫度梯度項", 
+  "conductionTerm": "熱傳導項",
+  "chaosState": "混沌狀態",
+  "chaoticSystem": "這是一個混沌系統",
+  
+  "lorenzPresets": {
+    "classic": "經典參數",
+    "stable": "穩定",
+    "chaotic": "高度混沌",
+    "butterfly": "蝴蝶效應"
+  },
+  
+  "stableState": "穩定狀態",
+  "chaoticState": "混沌狀態",
+  "points": "點數",
+  "controlHint": "視角控制",
+  "controlHintDesc": "調整下方滑桿改變視角",
+  "currentPosition": "當前位置",
+  "systemState": "系統狀態",
+  
+  "displayRangeMin": "顯示範圍最小",
+  "displayRangeMax": "顯示範圍最大",
+  "timeSeries": "時間序列",
+  "bifurcationDiagram": "分岔圖",
+  "showBifurcation": "顯示分岔圖",
+  "showTimeSeries": "顯示時間序列",
+  "systemStatus": "狀態",
+  "finalValue": "最終值",
+  "generatingLogistic": "生成邏輯映射中...",
+  "parameterControl": "參數控制",
+  "systemAnalysis": "系統分析",
+  "logisticEquation": "邏輯映射方程",
+  "extinct": "滅絕",
+  "stable": "穩定",
+  "oscillating": "振盪",
+  "periodic": "週期",
+  "chaotic": "混沌",
+  "stablePoint": "收斂到固定點",
+  "periodicOscillation": "週期性振盪",
+  "unpredictableBehavior": "不可預測行為",
+  "populationExtinction": "種群趨於滅絕",
+  "bifurcationDescription": "分岔圖說明：",
+  "xAxisRValue": "橫軸：r 參數值",
+  "yAxisBehavior": "縱軸：長期行為值",
+  "redLineCurrentR": "紅線：當前 r 值",
+  "greenDotsStableState": "綠點：系統的穩定狀態",
+  "time": "時間",
+  
+  "logisticPresets": {
+    "stable": "穩定狀態",
+    "period": "週期振盪",
+    "chaos": "混沌狀態"
+  },
+  
+  "energy": "能量",
+  "pendulumEquations": "雙擺方程組",
+  "lagrangianMechanics": "基於拉格朗日力學",
+  "pendulumMass1": "第一質量（青色）",
+  "pendulumMass2": "第二質量（紅色）",
+  "firstPendulumBob": "第一個擺球",
+  "secondPendulumBob": "第二個擺球",
+  "chaosTrail": "混沌運動軌跡",
+  "adjustParametersRealtime": "調整參數看到即時變化",
+  "observeChaosEvolution": "觀察混沌隨時間的演化",
+  "comparePresets": "比較不同的預設配置",
+  "watchEnergyConservation": "觀察能量守恆的作用",
+  "doublePendulumDescription": "確定性混沌的經典例子",
+  "sensitiveInitialConditions": "對初始條件的敏感依賴",
+  "conservativeSystem": "具有能量守恆的保守系統",
+  "hamiltonianDynamics": "由哈密頓動力學支配",
+  
+  "iterationEquation": "迭代方程式",
+  "colorIntensityEffect": "顏色強度改變視覺效果"
 }

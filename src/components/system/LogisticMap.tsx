@@ -1,9 +1,11 @@
 // src/components/systems/LogisticMap.tsx (正確實現)
 import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useCanvas } from '../../hooks/useCanvas';
 
 const LogisticMap: React.FC = () => {
-  const { canvasRef, ctx, isReady, clearCanvas } = useCanvas();
+  const { t } = useTranslation();
+  const { canvasRef, ctx, isReady } = useCanvas();
   
   const [params, setParams] = useState({
     rParam: 3.5,      // 當前r值
@@ -154,7 +156,7 @@ const LogisticMap: React.FC = () => {
     ctx.fillStyle = '#999';
     ctx.font = '12px monospace';
     ctx.textAlign = 'center';
-    ctx.fillText('時間', width / 2, height - 10);
+    ctx.fillText(t('time'), width / 2, height - 10);
     ctx.textAlign = 'right';
     ctx.fillText('1.0', 40, 60);
     ctx.fillText('0.5', 40, height / 2);
@@ -190,11 +192,11 @@ const LogisticMap: React.FC = () => {
 
   const getSystemState = () => {
     const r = params.rParam;
-    if (r < 1) return '滅絕';
-    if (r < 3) return '穩定';
-    if (r < 1 + Math.sqrt(6)) return '振盪';
-    if (r < 3.57) return '週期';
-    return '混沌';
+    if (r < 1) return t('extinct');
+    if (r < 3) return t('stable');
+    if (r < 1 + Math.sqrt(6)) return t('oscillating');
+    if (r < 3.57) return t('periodic');
+    return t('chaotic');
   };
 
   return (
@@ -204,11 +206,11 @@ const LogisticMap: React.FC = () => {
         <div className="inline-flex items-center space-x-3 mb-4">
           <div className="text-4xl">📈</div>
           <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
-            邏輯映射
+            {t('logisticTitle')}
           </h2>
         </div>
         <p className="text-gray-300 text-lg max-w-2xl mx-auto">
-          探索從週期行為到混沌的轉變過程
+          {t('logisticSubtitle')}
         </p>
       </div>
 
@@ -216,13 +218,13 @@ const LogisticMap: React.FC = () => {
       <div className="relative chaos-card p-6 glow-effect">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold text-purple-400">
-            {showTimeSeries ? '時間序列' : '分岔圖'}
+            {showTimeSeries ? t('timeSeries') : t('bifurcationDiagram')}
           </h3>
           <button
             onClick={() => setShowTimeSeries(!showTimeSeries)}
             className="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-sm transition-colors"
           >
-            {showTimeSeries ? '顯示分岔圖' : '顯示時間序列'}
+            {showTimeSeries ? t('showBifurcation') : t('showTimeSeries')}
           </button>
         </div>
 
@@ -240,10 +242,10 @@ const LogisticMap: React.FC = () => {
           <div className="flex items-center space-x-6">
             <div className="text-red-400">r: {params.rParam.toFixed(2)}</div>
             <div className="text-blue-400">x₀: {params.x0.toFixed(3)}</div>
-            <div className="text-yellow-400">狀態: {getSystemState()}</div>
+            <div className="text-yellow-400">{t('systemStatus')}: {getSystemState()}</div>
             {showTimeSeries && timeSeriesRef.current.length > 0 && (
               <div className="text-green-400">
-                最終值: {timeSeriesRef.current[timeSeriesRef.current.length - 1].toFixed(4)}
+                {t('finalValue')}: {timeSeriesRef.current[timeSeriesRef.current.length - 1].toFixed(4)}
               </div>
             )}
           </div>
@@ -253,7 +255,7 @@ const LogisticMap: React.FC = () => {
           <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-lg backdrop-blur-sm">
             <div className="text-center">
               <div className="animate-spin w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-              <p className="text-gray-300">生成邏輯映射中...</p>
+              <p className="text-gray-300">{t('generatingLogistic')}</p>
             </div>
           </div>
         )}
@@ -263,12 +265,12 @@ const LogisticMap: React.FC = () => {
       <div className="flex gap-6">
         {/* 參數控制 */}
         <div className="flex-1 chaos-card p-6">
-          <h3 className="text-xl font-semibold text-purple-400 mb-4">參數控制</h3>
+          <h3 className="text-xl font-semibold text-purple-400 mb-4">{t('parameterControl')}</h3>
           
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-red-400 mb-2">
-                r 參數: {params.rParam.toFixed(2)}
+                {t('rParameter')}: {params.rParam.toFixed(2)}
               </label>
               <input 
                 type="range" 
@@ -282,7 +284,7 @@ const LogisticMap: React.FC = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-blue-400 mb-2">
-                初始值 x₀: {params.x0.toFixed(3)}
+                {t('initialValue')} x₀: {params.x0.toFixed(3)}
               </label>
               <input 
                 type="range" 
@@ -296,7 +298,7 @@ const LogisticMap: React.FC = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-green-400 mb-2">
-                顯示範圍最小: {params.rMin.toFixed(1)}
+                {t('displayRangeMin')}: {params.rMin.toFixed(1)}
               </label>
               <input 
                 type="range" 
@@ -310,7 +312,7 @@ const LogisticMap: React.FC = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-cyan-400 mb-2">
-                顯示範圍最大: {params.rMax.toFixed(1)}
+                {t('displayRangeMax')}: {params.rMax.toFixed(1)}
               </label>
               <input 
                 type="range" 
@@ -330,29 +332,29 @@ const LogisticMap: React.FC = () => {
               onClick={() => handlePreset('stable')}
               className="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-lg text-sm transition-colors"
             >
-              🟢 穩定狀態
+              🟢 {t('logisticPresets.stable')}
             </button>
             <button
               onClick={() => handlePreset('period')}
               className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm transition-colors"
             >
-              🔵 週期振盪
+              🔵 {t('logisticPresets.period')}
             </button>
             <button
               onClick={() => handlePreset('chaos')}
               className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-sm transition-colors"
             >
-              🔴 混沌狀態
+              🔴 {t('logisticPresets.chaos')}
             </button>
           </div>
         </div>
 
         {/* 系統分析 */}
         <div className="flex-1 chaos-card p-6">
-          <h3 className="text-xl font-semibold text-purple-400 mb-4">📊 系統分析</h3>
+          <h3 className="text-xl font-semibold text-purple-400 mb-4">📊 {t('systemAnalysis')}</h3>
           <div className="space-y-4">
             <div className="bg-gray-800/50 p-4 rounded-lg">
-              <h4 className="text-sm font-semibold text-cyan-400 mb-2">邏輯映射方程</h4>
+              <h4 className="text-sm font-semibold text-cyan-400 mb-2">{t('logisticEquation')}</h4>
               <div className="font-mono text-center text-lg text-green-400">
                 x<sub>n+1</sub> = r × x<sub>n</sub> × (1 - x<sub>n</sub>)
               </div>
@@ -360,32 +362,32 @@ const LogisticMap: React.FC = () => {
             
             <div className="grid grid-cols-1 gap-3">
               <div className="bg-gray-800/30 p-3 rounded border-l-2 border-green-500">
-                <div className="text-sm font-semibold text-green-400">r &lt; 1: 滅絕</div>
-                <div className="text-xs text-gray-400">種群趨於滅絕</div>
+                <div className="text-sm font-semibold text-green-400">r &lt; 1: {t('extinct')}</div>
+                <div className="text-xs text-gray-400">{t('populationExtinction')}</div>
               </div>
               <div className="bg-gray-800/30 p-3 rounded border-l-2 border-blue-500">
-                <div className="text-sm font-semibold text-blue-400">1 &lt; r &lt; 3: 穩定</div>
-                <div className="text-xs text-gray-400">收斂到固定點</div>
+                <div className="text-sm font-semibold text-blue-400">1 &lt; r &lt; 3: {t('stable')}</div>
+                <div className="text-xs text-gray-400">{t('stablePoint')}</div>
               </div>
               <div className="bg-gray-800/30 p-3 rounded border-l-2 border-yellow-500">
-                <div className="text-sm font-semibold text-yellow-400">3 &lt; r &lt; 3.57: 週期</div>
-                <div className="text-xs text-gray-400">週期性振盪</div>
+                <div className="text-sm font-semibold text-yellow-400">3 &lt; r &lt; 3.57: {t('periodic')}</div>
+                <div className="text-xs text-gray-400">{t('periodicOscillation')}</div>
               </div>
               <div className="bg-gray-800/30 p-3 rounded border-l-2 border-red-500">
-                <div className="text-sm font-semibold text-red-400">r &gt; 3.57: 混沌</div>
-                <div className="text-xs text-gray-400">不可預測行為</div>
+                <div className="text-sm font-semibold text-red-400">r &gt; 3.57: {t('chaotic')}</div>
+                <div className="text-xs text-gray-400">{t('unpredictableBehavior')}</div>
               </div>
             </div>
 
             <div className="bg-gray-800/30 p-3 rounded">
               <div className="text-sm text-gray-300 mb-2">
-                <strong>分岔圖說明：</strong>
+                <strong>{t('bifurcationDescription')}</strong>
               </div>
               <div className="text-xs text-gray-400 space-y-1">
-                <div>• 橫軸：r 參數值</div>
-                <div>• 縱軸：長期行為值</div>
-                <div>• 紅線：當前 r 值</div>
-                <div>• 綠點：系統的穩定狀態</div>
+                <div>• {t('xAxisRValue')}</div>
+                <div>• {t('yAxisBehavior')}</div>
+                <div>• {t('redLineCurrentR')}</div>
+                <div>• {t('greenDotsStableState')}</div>
               </div>
             </div>
           </div>

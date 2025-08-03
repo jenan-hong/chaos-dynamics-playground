@@ -1,9 +1,11 @@
 // src/components/systems/MandelbrotSet.tsx
 import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useCanvas } from '../../hooks/useCanvas';
 import { MandelbrotSystem } from '@/systems/math/MandelbrotSystem';
 
 const MandelbrotSet: React.FC = () => {
+  const { t } = useTranslation();
   const { canvasRef, ctx, isReady } = useCanvas();
   
   const [params, setParams] = useState({
@@ -15,9 +17,7 @@ const MandelbrotSet: React.FC = () => {
   });
 
   const [isGenerating, setIsGenerating] = useState(false);
-  const [progress, setProgress] = useState(0);
   const mandelbrotSystemRef = useRef<MandelbrotSystem | null>(null);
-  const workerRef = useRef<Worker | null>(null);
 
   // 初始化系統
   useEffect(() => {
@@ -31,58 +31,7 @@ const MandelbrotSet: React.FC = () => {
     }
   }, [params]);
 
-  // Web Worker 計算（可選，用於避免UI阻塞）
-  const generateMandelbrotWorker = useCallback(async () => {
-    if (!ctx || !isReady || !canvasRef.current || !mandelbrotSystemRef.current) return;
-
-    const canvas = canvasRef.current;
-    const rect = canvas.getBoundingClientRect();
-    const width = Math.floor(rect.width);
-    const height = Math.floor(rect.height);
-
-    setIsGenerating(true);
-    setProgress(0);
-
-    // 創建 ImageData
-    const imageData = ctx.createImageData(width, height);
-    const data = imageData.data;
-
-    const system = mandelbrotSystemRef.current;
-    let pixelCount = 0;
-    const totalPixels = width * height;
-
-    // 逐行計算
-    for (let y = 0; y < height; y++) {
-      for (let x = 0; x < width; x++) {
-        const c = system.screenToComplex(x, y, width, height);
-        const result = system.calculatePoint(c);
-        const color = system.iterationsToColor(result.iterations, result.escaped);
-
-        const index = (y * width + x) * 4;
-        data[index] = color.r;     // Red
-        data[index + 1] = color.g; // Green
-        data[index + 2] = color.b; // Blue
-        data[index + 3] = 255;     // Alpha
-
-        pixelCount++;
-      }
-
-      // 每10行更新一次進度
-      if (y % 10 === 0) {
-        setProgress((pixelCount / totalPixels) * 100);
-        
-        // 使用 setTimeout 讓UI有機會更新
-        await new Promise(resolve => setTimeout(resolve, 0));
-      }
-    }
-
-    // 繪製到畫布
-    ctx.putImageData(imageData, 0, 0);
-    setIsGenerating(false);
-    setProgress(100);
-  }, [ctx, isReady, canvasRef, params]);
-
-  // 簡化版本（不使用Worker，但會阻塞UI）
+  // 生成曼德布洛特集合
   const generateMandelbrot = useCallback(() => {
     if (!ctx || !isReady || !canvasRef.current || !mandelbrotSystemRef.current) return;
 
@@ -185,11 +134,11 @@ const MandelbrotSet: React.FC = () => {
         <div className="inline-flex items-center space-x-3 mb-4">
           <div className="text-4xl">🌀</div>
           <h2 className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-cyan-400 bg-clip-text text-transparent">
-            曼德布洛特集合
+            {t('mandelbrotTitle')}
           </h2>
         </div>
         <p className="text-gray-300 text-lg max-w-2xl mx-auto">
-          探索複數平面上最著名的分形結構
+          {t('mandelbrotSubtitle')}
         </p>
       </div>
 
@@ -208,15 +157,15 @@ const MandelbrotSet: React.FC = () => {
         {/* 狀態顯示 */}
         <div className="absolute top-6 left-6 status-display rounded-lg p-3 text-sm">
           <div className="flex items-center space-x-6">
-            <div className="text-purple-400">中心: ({params.centerX.toFixed(6)}, {params.centerY.toFixed(6)})</div>
-            <div className="text-blue-400">縮放: {params.zoom.toFixed(2)}x</div>
-            <div className="text-green-400">迭代: {params.maxIterations}</div>
+            <div className="text-purple-400">{t('center')}: ({params.centerX.toFixed(6)}, {params.centerY.toFixed(6)})</div>
+            <div className="text-blue-400">{t('zoom')}: {params.zoom.toFixed(2)}x</div>
+            <div className="text-green-400">{t('maxIterations')}: {params.maxIterations}</div>
           </div>
         </div>
 
         {/* 點擊提示 */}
         <div className="absolute bottom-6 right-6 status-display rounded-lg p-3 text-xs">
-          <div className="text-gray-300">💡 點擊畫布可縮放至該點</div>
+          <div className="text-gray-300">{t('clickToZoomHint')}</div>
         </div>
 
         {/* 生成進度 */}
@@ -224,15 +173,7 @@ const MandelbrotSet: React.FC = () => {
           <div className="absolute inset-0 flex items-center justify-center bg-black/70 rounded-lg backdrop-blur-sm">
             <div className="text-center">
               <div className="animate-spin w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-              <p className="text-gray-300 mb-2">生成分形中...</p>
-              {progress > 0 && (
-                <div className="w-48 bg-gray-700 rounded-full h-2 mx-auto">
-                  <div 
-                    className="bg-purple-500 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${progress}%` }}
-                  ></div>
-                </div>
-              )}
+              <p className="text-gray-300">{t('generatingFractal')}</p>
             </div>
           </div>
         )}
@@ -241,7 +182,7 @@ const MandelbrotSet: React.FC = () => {
           <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-lg backdrop-blur-sm">
             <div className="text-center">
               <div className="animate-spin w-8 h-8 border-4 border-purple-500 border-t-transparent rounded-full mx-auto mb-4"></div>
-              <p className="text-gray-300">初始化Canvas中...</p>
+              <p className="text-gray-300">{t('initializingCanvas')}</p>
             </div>
           </div>
         )}
@@ -253,8 +194,8 @@ const MandelbrotSet: React.FC = () => {
         <div className="flex-1 chaos-card p-6">
           <div className="flex justify-between items-center mb-4">
             <div>
-              <h3 className="text-xl font-semibold text-purple-400">分形參數</h3>
-              <p className="text-gray-400 text-sm">調整曼德布洛特集合的生成參數</p>
+              <h3 className="text-xl font-semibold text-purple-400">{t('fractalParameters')}</h3>
+              <p className="text-gray-400 text-sm">{t('adjustMandelbrotParams')}</p>
             </div>
             <div className="flex space-x-2">
               <button
@@ -266,19 +207,19 @@ const MandelbrotSet: React.FC = () => {
                     : 'bg-green-500 hover:bg-green-600'
                 }`}
               >
-                🎨 生成
+                🎨 {t('generate')}
               </button>
               <button
                 onClick={handleReset}
                 className="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-lg text-sm font-medium transition-all"
               >
-                🔄 重置
+                🔄 {t('reset')}
               </button>
               <button
                 onClick={handleExport}
                 className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-medium transition-all"
               >
-                💾 導出
+                💾 {t('export')}
               </button>
             </div>
           </div>
@@ -286,7 +227,7 @@ const MandelbrotSet: React.FC = () => {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-red-400 mb-2">
-                最大迭代數: {params.maxIterations}
+                {t('maxIterations')}: {params.maxIterations}
               </label>
               <input 
                 type="range" 
@@ -300,7 +241,7 @@ const MandelbrotSet: React.FC = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-blue-400 mb-2">
-                縮放: {params.zoom.toFixed(2)}
+                {t('zoom')}: {params.zoom.toFixed(2)}
               </label>
               <input 
                 type="range" 
@@ -314,7 +255,7 @@ const MandelbrotSet: React.FC = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-green-400 mb-2">
-                中心X: {params.centerX.toFixed(4)}
+                {t('centerX')}: {params.centerX.toFixed(4)}
               </label>
               <input 
                 type="range" 
@@ -328,7 +269,7 @@ const MandelbrotSet: React.FC = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-yellow-400 mb-2">
-                中心Y: {params.centerY.toFixed(4)}
+                {t('centerY')}: {params.centerY.toFixed(4)}
               </label>
               <input 
                 type="range" 
@@ -342,7 +283,7 @@ const MandelbrotSet: React.FC = () => {
             </div>
             <div className="col-span-2">
               <label className="block text-sm font-medium text-purple-400 mb-2">
-                顏色強度: {params.colorIntensity.toFixed(1)}
+                {t('colorIntensity')}: {params.colorIntensity.toFixed(1)}
               </label>
               <input 
                 type="range" 
@@ -362,35 +303,35 @@ const MandelbrotSet: React.FC = () => {
               onClick={() => handlePreset('classic')}
               className="px-3 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm transition-colors"
             >
-              🌀 經典視圖
+              🌀 {t('classicView')}
             </button>
             <button
               onClick={() => handlePreset('seahorse')}
               className="px-3 py-2 bg-green-600 hover:bg-green-700 rounded-lg text-sm transition-colors"
             >
-              🌊 海馬尾巴
+              🌊 {t('seahorseTail')}
             </button>
             <button
               onClick={() => handlePreset('spiral')}
               className="px-3 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-sm transition-colors"
             >
-              🌀 螺旋結構
+              🌀 {t('spiralStructure')}
             </button>
             <button
               onClick={() => handlePreset('elephant')}
               className="px-3 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-sm transition-colors"
             >
-              🐘 大象谷
+              🐘 {t('elephantValley')}
             </button>
           </div>
         </div>
 
         {/* 系統分析 */}
         <div className="flex-1 chaos-card p-6">
-          <h3 className="text-xl font-semibold text-purple-400 mb-4">📊 分形數學</h3>
+          <h3 className="text-xl font-semibold text-purple-400 mb-4">📊 {t('fractalMath')}</h3>
           <div className="space-y-4">
             <div className="bg-gray-800/50 p-4 rounded-lg">
-              <h4 className="text-sm font-semibold text-cyan-400 mb-2">迭代方程</h4>
+              <h4 className="text-sm font-semibold text-cyan-400 mb-2">{t('iterationEquation')}</h4>
               <div className="font-mono text-center text-lg text-green-400 space-y-1">
                 <div>z<sub>n+1</sub> = z<sub>n</sub>² + c</div>
                 <div className="text-sm text-gray-300">z₀ = 0</div>
@@ -399,28 +340,28 @@ const MandelbrotSet: React.FC = () => {
             
             <div className="grid grid-cols-1 gap-3">
               <div className="bg-gray-800/30 p-3 rounded border-l-2 border-black">
-                <div className="text-sm font-semibold text-white">黑色區域</div>
-                <div className="text-xs text-gray-400">屬於曼德布洛特集合</div>
+                <div className="text-sm font-semibold text-white">{t('blackRegion')}</div>
+                <div className="text-xs text-gray-400">{t('mandelbrotBlackDesc')}</div>
               </div>
               <div className="bg-gray-800/30 p-3 rounded border-l-2 border-purple-500">
-                <div className="text-sm font-semibold text-purple-400">彩色區域</div>
-                <div className="text-xs text-gray-400">發散速度的可視化</div>
+                <div className="text-sm font-semibold text-purple-400">{t('colorRegion')}</div>
+                <div className="text-xs text-gray-400">{t('mandelbrotColorDesc')}</div>
               </div>
               <div className="bg-gray-800/30 p-3 rounded border-l-2 border-blue-500">
-                <div className="text-sm font-semibold text-blue-400">邊界</div>
-                <div className="text-xs text-gray-400">分形的精細結構</div>
+                <div className="text-sm font-semibold text-blue-400">{t('boundary')}</div>
+                <div className="text-xs text-gray-400">{t('mandelbrotBoundaryDesc')}</div>
               </div>
             </div>
 
             <div className="bg-gray-800/30 p-3 rounded">
               <div className="text-sm text-gray-300 mb-2">
-                <strong>操作說明：</strong>
+                <strong>{t('instructions')}：</strong>
               </div>
               <div className="text-xs text-gray-400 space-y-1">
-                <div>• 點擊畫布任意位置進行縮放</div>
-                <div>• 調整迭代數增加細節</div>
-                <div>• 使用預設探索有趣區域</div>
-                <div>• 顏色強度改變視覺效果</div>
+                <div>• {t('clickToZoom')}</div>
+                <div>• {t('increaseIterations')}</div>
+                <div>• {t('usePresets')}</div>
+                <div>• {t('colorIntensityEffect')}</div>
               </div>
             </div>
           </div>

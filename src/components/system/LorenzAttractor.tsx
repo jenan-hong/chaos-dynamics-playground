@@ -1,10 +1,12 @@
 // src/components/systems/LorenzAttractor.tsx (最終完整版本)
 import React, { useState, useCallback, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useCanvas } from '../../hooks/useCanvas';
 import { useAnimation } from '../../hooks/useAnimation';
 import { LorenzSystem, Point3D } from '@/systems/math/LorenzSystem';
 
 const LorenzAttractor: React.FC = () => {
+  const { t } = useTranslation();
   const { canvasRef, ctx, isReady, clearCanvas } = useCanvas();
   const { isRunning, fps, toggleAnimation, setAnimationCallback } = useAnimation();
   
@@ -211,8 +213,8 @@ const LorenzAttractor: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-purple-400 mb-2">洛倫茲吸引子</h2>
-        <p className="text-gray-300">探索著名的洛倫茲吸引子 - 蝴蝶效應的數學化身</p>
+        <h2 className="text-2xl font-bold text-purple-400 mb-2">{t('lorenzTitle')}</h2>
+        <p className="text-gray-300">{t('lorenzSubtitle')}</p>
       </div>
       
       {/* Canvas區域 - 加大尺寸 */}
@@ -233,16 +235,16 @@ const LorenzAttractor: React.FC = () => {
           <div className="text-blue-400">X: {currentPos.x.toFixed(3)}</div>
           <div className="text-blue-400">Y: {currentPos.y.toFixed(3)}</div>
           <div className="text-blue-400">Z: {currentPos.z.toFixed(3)}</div>
-          <div className="text-purple-400">Points: {trailPointsRef.current.length}</div>
+          <div className="text-purple-400">{t('points')}: {trailPointsRef.current.length}</div>
           <div className={`${isChaotic ? 'text-red-400' : 'text-green-400'}`}>
-            {isChaotic ? '混沌狀態' : '穩定狀態'}
+            {isChaotic ? t('chaoticState') : t('stableState')}
           </div>
         </div>
 
         {/* 控制提示 */}
         <div className="absolute bottom-4 right-4 bg-black/80 backdrop-blur-sm rounded-lg p-3 text-xs">
-          <div className="text-gray-400">視角控制</div>
-          <div className="text-gray-500">調整下方滑桿改變視角</div>
+          <div className="text-gray-400">{t('controlHint')}</div>
+          <div className="text-gray-500">{t('controlHintDesc')}</div>
         </div>
       </div>
       
@@ -252,26 +254,26 @@ const LorenzAttractor: React.FC = () => {
           onClick={() => handlePreset('classic')}
           className="px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-sm transition-colors"
         >
-          經典參數
+          {t('lorenzPresets.classic')}
         </button>
         <button
           onClick={() => handlePreset('butterfly')}
           className="px-3 py-1 bg-green-600 hover:bg-green-700 rounded text-sm transition-colors"
         >
-          蝴蝶效應
+          {t('lorenzPresets.butterfly')}
         </button>
         <button
           onClick={() => handlePreset('chaotic')}
           className="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-sm transition-colors"
         >
-          高度混沌
+          {t('lorenzPresets.chaotic')}
         </button>
       </div>
 
       {/* 系統參數控制 */}
       <div className="bg-gray-800/50 rounded-lg p-4">
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold text-purple-400">系統參數</h3>
+          <h3 className="text-lg font-semibold text-purple-400">{t('parameters')}</h3>
           <div className="space-x-2">
             <button
               onClick={toggleAnimation}
@@ -281,19 +283,19 @@ const LorenzAttractor: React.FC = () => {
                   : 'bg-green-600 hover:bg-green-700'
               }`}
             >
-              {isRunning ? '停止' : '開始'}
+              {isRunning ? t('stop') : t('start')}
             </button>
             <button
               onClick={handleReset}
               className="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded-lg text-sm font-medium transition-colors"
             >
-              重置
+              {t('reset')}
             </button>
             <button
               onClick={handleExport}
               className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-sm font-medium transition-colors"
             >
-              導出
+              {t('export')}
             </button>
           </div>
         </div>
@@ -301,7 +303,7 @@ const LorenzAttractor: React.FC = () => {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              σ (Sigma): {params.sigma.toFixed(1)}
+              {t('sigma')}: {params.sigma.toFixed(1)}
             </label>
             <input 
               type="range" 
@@ -315,7 +317,7 @@ const LorenzAttractor: React.FC = () => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              ρ (Rho): {params.rho.toFixed(1)}
+              {t('rho')}: {params.rho.toFixed(1)}
             </label>
             <input 
               type="range" 
@@ -329,7 +331,7 @@ const LorenzAttractor: React.FC = () => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              β (Beta): {params.beta.toFixed(2)}
+              {t('beta')}: {params.beta.toFixed(2)}
             </label>
             <input 
               type="range" 
@@ -343,7 +345,7 @@ const LorenzAttractor: React.FC = () => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              速度: {params.speed}
+              {t('speed')}: {params.speed}
             </label>
             <input 
               type="range" 
@@ -357,7 +359,7 @@ const LorenzAttractor: React.FC = () => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              縮放: {params.scale}
+              {t('scale')}: {params.scale}
             </label>
             <input 
               type="range" 
@@ -371,7 +373,7 @@ const LorenzAttractor: React.FC = () => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              軌跡: {params.trailLength}
+              {t('trailLength')}: {params.trailLength}
             </label>
             <input 
               type="range" 
@@ -388,11 +390,11 @@ const LorenzAttractor: React.FC = () => {
 
       {/* 視角控制 */}
       <div className="bg-gray-800/50 rounded-lg p-4">
-        <h3 className="text-lg font-semibold text-purple-400 mb-4">視角控制</h3>
+        <h3 className="text-lg font-semibold text-purple-400 mb-4">{t('viewControl')}</h3>
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              X軸旋轉: {viewSettings.rotationX.toFixed(2)}
+              {t('rotationX')}: {viewSettings.rotationX.toFixed(2)}
             </label>
             <input 
               type="range" 
@@ -406,7 +408,7 @@ const LorenzAttractor: React.FC = () => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              Y軸旋轉: {viewSettings.rotationY.toFixed(2)}
+              {t('rotationY')}: {viewSettings.rotationY.toFixed(2)}
             </label>
             <input 
               type="range" 
@@ -420,7 +422,7 @@ const LorenzAttractor: React.FC = () => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              X偏移: {viewSettings.offsetX}
+              {t('offsetX')}: {viewSettings.offsetX}
             </label>
             <input 
               type="range" 
@@ -434,7 +436,7 @@ const LorenzAttractor: React.FC = () => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              Y偏移: {viewSettings.offsetY}
+              {t('offsetY')}: {viewSettings.offsetY}
             </label>
             <input 
               type="range" 
@@ -448,7 +450,7 @@ const LorenzAttractor: React.FC = () => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              縮放: {viewSettings.zoom.toFixed(1)}
+              {t('zoom')}: {viewSettings.zoom.toFixed(1)}
             </label>
             <input 
               type="range" 
@@ -465,19 +467,19 @@ const LorenzAttractor: React.FC = () => {
 
       {/* 數學方程顯示 */}
       <div className="bg-gray-900/50 rounded-lg p-4">
-        <h4 className="text-lg font-semibold text-purple-400 mb-3">洛倫茲方程組</h4>
+        <h4 className="text-lg font-semibold text-purple-400 mb-3">{t('lorenzEquations')}</h4>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div className="bg-green-900/20 p-3 rounded border border-green-500/20">
             <div className="text-green-400 font-mono text-sm">dx/dt = σ(y - x)</div>
-            <div className="text-gray-400 text-xs mt-1">對流強度項</div>
+            <div className="text-gray-400 text-xs mt-1">{t('convectionTerm')}</div>
           </div>
           <div className="bg-blue-900/20 p-3 rounded border border-blue-500/20">
             <div className="text-blue-400 font-mono text-sm">dy/dt = x(ρ - z) - y</div>
-            <div className="text-gray-400 text-xs mt-1">溫度梯度項</div>
+            <div className="text-gray-400 text-xs mt-1">{t('temperatureTerm')}</div>
           </div>
           <div className="bg-red-900/20 p-3 rounded border border-red-500/20">
             <div className="text-red-400 font-mono text-sm">dz/dt = xy - βz</div>
-            <div className="text-gray-400 text-xs mt-1">熱傳導項</div>
+            <div className="text-gray-400 text-xs mt-1">{t('conductionTerm')}</div>
           </div>
         </div>
       </div>

@@ -3,7 +3,7 @@
   "subtitle": "探索数学中的混沌理论与分形之美，体验从简单规则中诞生的复杂行为",
   "quote": "「上帝不会掷骰子，但在量子力学的某些地方，似乎连上帝也无法预测。」- Stephen Hawking",
   "mathematicalBeauty": "基于数学与艺术的交汇，探索混沌理论的无限魅力",
-  
+
   "lorenzName": "洛伦兹吸引子",
   "lorenzDesc": "蝴蝶效应的数学化身",
   "mandelbrotName": "曼德布洛特集合",
@@ -12,9 +12,17 @@
   "juliaDesc": "美丽的分形图案",
   "pendulumName": "混沌摆",
   "pendulumDesc": "双摆的混沌运动",
+  "pendulumTitle": "双重摆",
+  "pendulumSubtitle": "观察看似简单的双摆系统如何展现复杂的混沌行为",
+  "gravity": "重力",
+  "damping": "阻尼",
+  "length1": "长度1",
+  "length2": "长度2",
+  "mass1": "质量1",
+  "mass2": "质量2",
   "logisticName": "逻辑映射",
   "logisticDesc": "从周期到混沌",
-  
+
   "start": "开始",
   "stop": "停止",
   "pause": "暂停",
@@ -25,7 +33,7 @@
   "clear": "清除",
   "save": "保存",
   "load": "载入",
-  
+
   "generating": "生成中...",
   "calculating": "计算中...",
   "rendering": "渲染中...",
@@ -33,12 +41,12 @@
   "paused": "已暂停",
   "running": "运行中",
   "stopped": "已停止",
-  
+
   "parameters": "参数控制",
   "presets": "精选预设",
   "settings": "设置",
   "controls": "控制",
-  
+
   "juliaTitle": "Julia 集合",
   "juliaSubtitle": "探索参数化的分形美学，每个参数c都创造出独特的图案",
   "realPart": "实部 (c)",
@@ -65,11 +73,162 @@
     "classic": "经典",
     "connected": "连通"
   },
-  
+
   "instructions": "操作说明",
   "mathBackground": "数学背景",
   "clickToZoom": "点击画布任意位置进行缩放",
   "adjustParameters": "调整参数看到即时变化",
   "usePresets": "使用预设探索有趣区域",
-  "exportImage": "导出图片保存您的作品"
+  "exportImage": "导出图片保存您的作品",
+
+  "lorenzTitle": "洛伦兹吸引子",
+  "lorenzSubtitle": "探索混沌理论的经典范例，观察蝴蝶效应如何从简单方程中诞生",
+  "sigma": "σ (sigma)",
+  "rho": "ρ (rho)",
+  "beta": "β (beta)",
+  "speed": "速度",
+  "scale": "缩放",
+  "trailLength": "轨迹长度",
+  "viewControl": "视角控制",
+  "offsetX": "X轴偏移",
+  "offsetY": "Y轴偏移",
+  "rotationX": "X轴旋转",
+  "rotationY": "Y轴旋转",
+  "lorenzEquations": "洛伦兹方程组",
+  "convectionTerm": "对流强度项",
+  "temperatureTerm": "温度梯度项",
+  "conductionTerm": "热传导项",
+  "chaosState": "混沌状态",
+  "chaoticSystem": "这是一个混沌系统",
+
+  "lorenzPresets": {
+    "classic": "经典参数",
+    "stable": "稳定",
+    "chaotic": "高度混沌",
+    "butterfly": "蝴蝶效应"
+  },
+  
+  "stableState": "稳定状态",
+  "chaoticState": "混沌状态",
+  "points": "点数",
+  "controlHint": "视角控制",
+  "controlHintDesc": "调整下方滑杆改变视角",
+  "currentPosition": "当前位置",
+  "systemState": "系统状态",
+  
+  "logisticTitle": "逻辑映射",
+  "logisticSubtitle": "探索从周期行为到混沌的转变过程",
+  "rParameter": "r参数",
+  "initialValue": "初始值",
+  "displayRangeMin": "显示范围最小",
+  "displayRangeMax": "显示范围最大",
+  "timeSeries": "时间序列",
+  "bifurcationDiagram": "分岔图",
+  "showBifurcation": "显示分岔图",
+  "showTimeSeries": "显示时间序列",
+  "systemStatus": "状态",
+  "finalValue": "最终值",
+  "generatingLogistic": "生成逻辑映射中...",
+  "parameterControl": "参数控制",
+  "systemAnalysis": "系统分析",
+  "logisticEquation": "逻辑映射方程",
+  "extinct": "灭绝",
+  "stable": "稳定",
+  "oscillating": "振荡",
+  "periodic": "周期",
+  "chaotic": "混沌",
+  "stablePoint": "收敛到固定点",
+  "periodicOscillation": "周期性振荡",
+  "unpredictableBehavior": "不可预测行为",
+  "populationExtinction": "种群趋于灭绝",
+  "bifurcationDescription": "分岔图说明：",
+  "xAxisRValue": "横轴：r 参数值",
+  "yAxisBehavior": "纵轴：长期行为值",
+  "redLineCurrentR": "红线：当前 r 值",
+  "greenDotsStableState": "绿点：系统的稳定状态",
+  "time": "时间",
+  
+  "logisticPresets": {
+    "stable": "稳定状态",
+    "period": "周期振荡",
+    "chaos": "混沌状态"
+  },
+  
+  "energy": "能量",
+  "pendulumEquations": "双摆方程组",
+  "lagrangianMechanics": "基于拉格朗日力学",
+  "pendulumMass1": "第一质量（青色）",
+  "pendulumMass2": "第二质量（红色）",
+  "firstPendulumBob": "第一个摆球",
+  "secondPendulumBob": "第二个摆球",
+  "chaosTrail": "混沌运动轨迹",
+  "adjustParametersRealtime": "调整参数看到实时变化",
+  "observeChaosEvolution": "观察混沌随时间的演化",
+  "comparePresets": "比较不同的预设配置",
+  "watchEnergyConservation": "观察能量守恒的作用",
+  "doublePendulumDescription": "确定性混沌的经典例子",
+  "sensitiveInitialConditions": "对初始条件的敏感依赖",
+  "conservativeSystem": "具有能量守恒的保守系统",
+  "hamiltonianDynamics": "由哈密顿动力学支配",
+  
+  "pendulumPresets": {
+    "classic": "经典",
+    "asymmetric": "不对称",
+    "heavy": "重质量"
+  },
+  
+  "trailLength": "轨迹长度",
+  "iterations": "迭代次数",
+  "formula": "公式",
+  "equation": "方程式",
+  "parameter": "参数",
+  "iteration": "迭代",
+  "convergence": "收敛",
+  "divergence": "发散",
+  "trajectory": "轨迹",
+  "attractor": "吸引子",
+  "fractal": "分形",
+  "chaos": "混沌",
+  "dynamics": "动力学",
+  
+  "units": {
+    "pixels": "像素",
+    "seconds": "秒",
+    "fps": "FPS",
+    "iterations": "迭代",
+    "zoom": "缩放",
+    "degrees": "度"
+  },
+  
+  "mandelbrotTitle": "曼德布洛特集合",
+  "mandelbrotSubtitle": "探索复数平面上最著名的分形结构",
+  "mandelbrotFormula": "z<sub>n+1</sub> = z<sub>n</sub>² + c",
+  "mandelbrotInitial": "z₀ = 0",
+  "mandelbrotPresets": {
+    "classic": "经典",
+    "seahorse": "海马",
+    "spiral": "螺旋",
+    "elephant": "大象"
+  },
+  
+  "center": "中心",
+  "fractalParameters": "分形参数",
+  "adjustMandelbrotParams": "调整曼德布洛特集合的生成参数",
+  "centerX": "中心X",
+  "centerY": "中心Y",
+  "clickToZoomHint": "💡 点击画布可缩放至该点",
+  "generatingFractal": "生成分形中...",
+  "initializingCanvas": "初始化Canvas中...",
+  "classicView": "经典视图",
+  "seahorseTail": "海马尾巴",
+  "spiralStructure": "螺旋结构",
+  "elephantValley": "大象谷",
+  "fractalMath": "分形数学",
+  
+  "iterationEquation": "迭代方程",
+  "mandelbrotBlackDesc": "属于曼德布洛特集合",
+  "mandelbrotColorDesc": "发散速度的可视化",
+  "mandelbrotBoundaryDesc": "分形的精细结构",
+  "increaseIterations": "增加迭代数获得更多细节",
+  "colorIntensityEffect": "颜色强度改变视觉效果"
 }
